@@ -1,4 +1,5 @@
 import { writeFile, access } from "fs/promises";
+import { fileExists } from "../utils/file-exists.js";
 
 import { getDirname } from "../utils/path.js";
 
@@ -7,17 +8,16 @@ const filePath = `${__dirname}/files/fresh.txt`;
 
 export const create = async () => {
   try {
-    await access(filePath);
-    throw new Error("FS operation failed");
-  } catch (error) {
-    if (error.code === "ENOENT") {
+    const exists = await fileExists(filePath);
+
+    if (exists) {
+      throw new Error("FS operation failed");
+    } else {
       await writeFile(filePath, "I am fresh and young");
       console.log("File created");
     }
-
-    if (error.code === "EEXIST") {
-      console.log(error);
-    }
+  } catch (error) {
+    console.log(error);
   }
 };
 

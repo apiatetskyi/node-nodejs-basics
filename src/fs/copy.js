@@ -6,6 +6,7 @@ const __dirname = getDirname(import.meta.url);
 export const copy = async () => {
   try {
     await mkdir(`${__dirname}/files_copy`);
+
     const entries = await readdir(`${__dirname}/files`, {
       withFileTypes: true,
     });
@@ -18,6 +19,7 @@ export const copy = async () => {
         );
       }
     }
+    console.log("Directory copied");
   } catch (error) {
     console.log(error);
     throw new Error("FS operation failed");
