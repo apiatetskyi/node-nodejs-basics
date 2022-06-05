@@ -1,25 +1,14 @@
-import { constants } from "fs";
-import { writeFile, access, readFile } from "fs/promises";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
+import { writeFile, access } from "fs/promises";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { getDirname } from "../utils/path.js";
 
+const __dirname = getDirname(import.meta.url);
 const filePath = `${__dirname}/files/fresh.txt`;
-
-class ExistsError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = "ExistsError";
-    this.code = "EEXIST";
-  }
-}
 
 export const create = async () => {
   try {
     await access(filePath);
-    throw new ExistsError("FS operation failed");
+    throw new Error("FS operation failed");
   } catch (error) {
     if (error.code === "ENOENT") {
       await writeFile(filePath, "I am fresh and young");
